@@ -6,8 +6,8 @@ import com.acmerobotics.dashboard.config.Config;
 public class IntakeArmVariables {
     //ENCODERS
 
-    public static int TRANSFER_PIXEL = 65;
-    public static int INTAKE_PIXEL = -125;
+    public static int TRANSFER_PIXEL = 60;
+    public static int INTAKE_PIXEL = -120;
     public static int HOVER_PIXEL = -60;
     public static int AVOID_PIXEL = -35;
     public static int START = 0;
@@ -15,6 +15,8 @@ public class IntakeArmVariables {
     // PID
     public static double p = 0.0055, i =0, d=0.0003;
     public static double f =0.0;
+
+    public static double pa = 0.0045, da = 0.0000;
 
     public static double GRAB_DISTANCE = 4.5;
 

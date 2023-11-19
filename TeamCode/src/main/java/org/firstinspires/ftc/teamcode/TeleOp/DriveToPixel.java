@@ -229,6 +229,10 @@ public class DriveToPixel extends LinearOpMode {
         intakeArm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         intakeArm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         intakeArm.setDirection(DcMotorEx.Direction.REVERSE);
+        intakeController = new PIDController(p,i,d);
+        moveIntake = 0;
+        v4bTimer.reset();
+        intakeClawTimer.reset();
 
         drivetrain.leftSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         drivetrain.rightSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -236,13 +240,7 @@ public class DriveToPixel extends LinearOpMode {
         drivetrain.rightSlide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         drivetrain.leftSlide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-        intakeArm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        intakeArm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-        intakeController = new PIDController(p,i,d);
-        moveIntake = 0;
-        v4bTimer.reset();
-        intakeClawTimer.reset();
 
         /** Distance Sensor Kalman Filter **/
         double initialEstimate = 4.65;  // Initial estimate based on the expected sensor reading
