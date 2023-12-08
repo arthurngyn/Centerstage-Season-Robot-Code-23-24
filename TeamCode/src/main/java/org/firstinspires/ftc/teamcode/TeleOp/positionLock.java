@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.CAMERA_HEIGHT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.CAMERA_WIDTH;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.focalLength;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherH;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherS;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherV;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerH;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerS;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerV;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherHY;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherSY;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherVY;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerHY;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerSY;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerVY;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.objectWidthInRealWorldUnits;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -45,17 +45,17 @@ public class positionLock extends LinearOpMode {
     double cX = 0;
     double cY = 0;
     double width = 0;
-    double x = 0;
-    double y = 0;
+    public static double x = 0;
+    public static double y = 0;
     private OpenCvCamera controlHubCam;
-    private Scalar lowerYellow = new Scalar(lowerH, lowerS, lowerV);
-    private Scalar upperYellow = new Scalar(higherH, higherS, higherV);
+    private Scalar lowerYellow = new Scalar(lowerHY, lowerSY, lowerVY);
+    private Scalar upperYellow = new Scalar(higherHY, higherSY, higherVY);
 
-    public static double xyP = 0.5;
+    public static double xyP = 0.3;
     public static double headingP = 0.8;
 
-    public static double X_MULTIPLIER = -0.93;
-    public static double Y_MULTIPLIER = 0.65;
+    public static double X_OFFSET = 0.5;
+    public static double Y_OFFSET = -4;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -81,7 +81,7 @@ public class positionLock extends LinearOpMode {
 
             }
             if(gamepad1.right_bumper){
-                lockTo(new Pose2d(x*X_MULTIPLIER,y*Y_MULTIPLIER,Math.toRadians(90)), drive);
+                lockTo(new Pose2d(-x + X_OFFSET,y + Y_OFFSET,Math.toRadians(90)), drive);
             }
             drive.update();
             telemetry.addData("X: ", x);

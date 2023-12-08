@@ -14,12 +14,12 @@ import static org.firstinspires.ftc.teamcode.Hardware.Variables.AnglePID.VKp;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.CAMERA_HEIGHT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.CAMERA_WIDTH;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.focalLength;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherH;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherS;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherV;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerH;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerS;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerV;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherHY;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherSY;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.higherVY;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerHY;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerSY;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowerVY;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.objectWidthInRealWorldUnits;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.widthFocalLength;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeArmVariables.AVOID_PIXEL;
@@ -123,8 +123,8 @@ public class DriveToPixel extends LinearOpMode {
     double cY = 0;
     double width = 0;
     private OpenCvCamera controlHubCam;
-    private Scalar lowerYellow = new Scalar(lowerH, lowerS, lowerV);
-    private Scalar upperYellow = new Scalar(higherH, higherS, higherV);
+    private Scalar lowerYellow = new Scalar(lowerHY, lowerSY, lowerVY);
+    private Scalar upperYellow = new Scalar(higherHY, higherSY, higherVY);
 
     private PIDController distanceController;
     private PIDController horizontalController;
@@ -479,9 +479,6 @@ public class DriveToPixel extends LinearOpMode {
                         drivetrain.powerSlides(0);
                     }
                     break;
-            }
-            if(filteredDistance <= GRAB_DISTANCE){
-                gamepad2.rumble(500);
             }
 
                 intakeController.setPID(p, i, d);

@@ -7,12 +7,20 @@ import org.openftc.easyopencv.OpenCvCamera;
 @Config
 public class CVVariables {
     //Scalar Detector Values
-    public static double lowerH = 0;
-    public static double lowerS = 100;
-    public static double lowerV = 100;
-    public static double higherH = 100;
-    public static double higherS = 255;
-    public static double higherV = 255;
+    public static double lowerHB = 100;
+    public static double lowerSB = 50;
+    public static double lowerVB = 50;
+    public static double higherHB = 140;
+    public static double higherSB = 255;
+    public static double higherVB = 255;
+
+    //Scalar Detector Values
+    public static double lowerHY = 0;
+    public static double lowerSY= 100;
+    public static double lowerVY = 100;
+    public static double higherHY = 100;
+    public static double higherSY = 255;
+    public static double higherVY = 255;
 
     public static final int CAMERA_WIDTH = 640; // width  of wanted camera resolution
     public static final int CAMERA_HEIGHT = 360; // height of wanted camera resolution
