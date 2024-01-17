@@ -15,18 +15,15 @@ import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeTimeVariab
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeTimeVariables.SLIDES_MOVE_TIME;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_INTAKE;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_TILT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AUTON_POS;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.DPAD_LEFT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.LS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.LS_INTAKE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.OS_CLOSE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.OS_DEPOSIT_2;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.OS_INTAKE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.RS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.RS_INTAKE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeTimeVariables.FINGER_MOVE;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeTimeVariables.TILT_BUCKET;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -44,7 +41,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.TeleOp.BlueTeleOP;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.ErrorCalc;
@@ -66,8 +62,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Config
-@Autonomous(name = "Blue 1", group = "Blue")
-public class Blue1 extends LinearOpMode {
+@Autonomous(name = "Blue 2", group = "Blue")
+public class Blue2 extends LinearOpMode {
 
     double cX;
     double cY;
@@ -77,32 +73,42 @@ public class Blue1 extends LinearOpMode {
     private Scalar upperBlue = new Scalar(higherHB, higherSB, higherVB);
     String cube_position;
 
-    public static double START_X = 10;
+    public static double WAIT_TIME = 3;
+
+    public static double START_X = -37;
     public static double START_Y = 61.5;
     public static double START_ANGLE = 270;
 
-    public static double SPIKE_MARK_X_LEFT = 31.5;
-    public static double SPIKE_MARK_Y_LEFT = 33;
-    public static double BACKDROP_X_LEFT = 44;
-    public static double BACKDROP_Y_LEFT = 36.5;
+    public static double SPIKE_MARK_X_LEFT = -38;
+    public static double SPIKE_MARK_Y_LEFT = 32;
+    public static double BACKDROP_X_LEFT = 42;
+    public static double BACKDROP_Y_LEFT = 41;
 
-    public static double SPIKE_MARK_X_MIDDLE = 24;
-    public static double SPIKE_MARK_Y_MIDDLE = 22;
-    public static double BACKDROP_X_MIDDLE = 44;
-    public static double BACKDROP_Y_MIDDLE = 30;
+    public static double SPIKE_MARK_X_MIDDLE = -38;
+    public static double SPIKE_MARK_Y_MIDDLE = 11.5;
+    public static double BACKDROP_X_MIDDLE = 42;
+    public static double BACKDROP_Y_MIDDLE = 34.25;
 
-    public static double SPIKE_MARK_X_RIGHT = 10;
-    public static double SPIKE_MARK_Y_RIGHT = 36;
-    public static double BACKDROP_X_RIGHT = 44;
-    public static double BACKDROP_Y_RIGHT = 23;
+    public static double SPIKE_MARK_X_RIGHT = -40.5;
+    public static double SPIKE_MARK_Y_RIGHT = 34;
+    public static double BACKDROP_X_RIGHT = 42;
+    public static double BACKDROP_Y_RIGHT = 27;
 
+    public static double SPIKE_MARK_ANGLE_MIDDLE = 90;
+    public static double SPIKE_MARK_ANGLE_LEFT = 0;
     public static double SPIKE_MARK_ANGLE = 180;
     public static double BACKDROP_ANGLE = 180;
+    public static double DRIVE_TRUSS_ANGLE = 180;
 
-    public static double INIT_PARK_X = 40;
-    public static double INIT_PARK_Y = 5;
+    public static double DRIVE_TRUSS_X = -37;
+    public static double DRIVE_TRUSS_Y = 10;
+    public static double INIT_BACKDROP_X = 35;
+    public static double INIT_BACKDROP_Y = 5;
+
+    public static double INIT_PARK_X = 45;
+    public static double INIT_PARK_Y = 7;
     public static double PARK_X = 50;
-    public static double PARK_Y = 5;
+    public static double PARK_Y = 4;
     public static double PARK_ANGLE = 180;
 
     public static double xyP = 0.6;
@@ -112,6 +118,7 @@ public class Blue1 extends LinearOpMode {
         START,
         DRIVE_TO_SPIKE,
         DROP_SPIKE,
+        DRIVE_TRUSS,
         MOVE_SLIDES,
         SWING_ARM,
         DRIVE_TO_BACKDROP,
@@ -150,7 +157,7 @@ public class Blue1 extends LinearOpMode {
 
         ErrorCalc calculate = new ErrorCalc();
 
-        /** INTAKE MOTOR PIDF **/
+        /** INTAKE ARM PIDF **/
         leftServo = hardwareMap.get(Servo.class, "Left3");
         rightServo = hardwareMap.get(Servo.class, "Right4");
         angledServo = hardwareMap.get(Servo.class, "Angle2");
@@ -189,24 +196,33 @@ public class Blue1 extends LinearOpMode {
                 spike_mark_y = SPIKE_MARK_Y_LEFT;
                 backdrop_x = BACKDROP_X_LEFT;
                 backdrop_y = BACKDROP_Y_LEFT;
+                SPIKE_MARK_ANGLE = SPIKE_MARK_ANGLE_LEFT;
                 break;
             case "middle":
                 spike_mark_x = SPIKE_MARK_X_MIDDLE;
                 spike_mark_y = SPIKE_MARK_Y_MIDDLE;
                 backdrop_x = BACKDROP_X_MIDDLE;
                 backdrop_y = BACKDROP_Y_MIDDLE;
+                SPIKE_MARK_ANGLE = SPIKE_MARK_ANGLE_MIDDLE;
                 break;
             default:
                 spike_mark_x = SPIKE_MARK_X_RIGHT;
                 spike_mark_y = SPIKE_MARK_Y_RIGHT;
                 backdrop_x = BACKDROP_X_RIGHT;
                 backdrop_y = BACKDROP_Y_RIGHT;
+                SPIKE_MARK_ANGLE = 180;
                 break;
         }
         Trajectory DROP_SPIKE = drive.trajectoryBuilder(startPose)
                 .lineToSplineHeading(new Pose2d(spike_mark_x, spike_mark_y, Math.toRadians(SPIKE_MARK_ANGLE)))
                 .build();
-        Trajectory DROP_PIXEL = drive.trajectoryBuilder(DROP_SPIKE.end())
+        TrajectorySequence DRIVE_TRUSS = drive.trajectorySequenceBuilder(DROP_SPIKE.end())
+                .lineToSplineHeading(new Pose2d(DRIVE_TRUSS_X, DRIVE_TRUSS_Y, Math.toRadians(SPIKE_MARK_ANGLE)))
+                .lineToSplineHeading(new Pose2d(DRIVE_TRUSS_X, INIT_BACKDROP_Y, Math.toRadians(DRIVE_TRUSS_ANGLE)))
+                .waitSeconds(WAIT_TIME)
+                .lineToSplineHeading(new Pose2d(INIT_BACKDROP_X, INIT_BACKDROP_Y, Math.toRadians(DRIVE_TRUSS_ANGLE)))
+                .build();
+        TrajectorySequence DROP_PIXEL = drive.trajectorySequenceBuilder(DRIVE_TRUSS.end())
                 .lineToSplineHeading(new Pose2d(backdrop_x, backdrop_y, Math.toRadians(BACKDROP_ANGLE)))
                 .build();
         TrajectorySequence INIT_PARK = drive.trajectorySequenceBuilder(DROP_PIXEL.end())
@@ -244,12 +260,19 @@ public class Blue1 extends LinearOpMode {
                     if (timer.seconds() >= INTAKE_MOTOR_TIME) {
                         timer.reset();
                         intakeMotor.setPower(0);
+                        robot = RobotState.DRIVE_TRUSS;
+                    }
+                    break;
+                case DRIVE_TRUSS:
+                    drive.followTrajectorySequence(DRIVE_TRUSS);
+                    if (!drive.isBusy()) {
+                        timer.reset();
                         robot = RobotState.MOVE_SLIDES;
                     }
                     break;
                 case MOVE_SLIDES:
-                        drivetrain.moveSlides(AUTON_POS);
-                        if (timer.seconds() >= SLIDES_MOVE_TIME){
+                    drivetrain.moveSlides(AUTON_POS);
+                    if (timer.seconds() >= SLIDES_MOVE_TIME){
                         timer.reset();
                         robot = RobotState.SWING_ARM;
                     }
@@ -264,18 +287,18 @@ public class Blue1 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_BACKDROP:
-                    drive.followTrajectory(DROP_PIXEL);
+                    drive.followTrajectorySequence(DROP_PIXEL);
                     if (!drive.isBusy()) {
                         timer.reset();
                         robot = RobotState.DEPOSIT_PIXEL;
                     }
                     break;
                 case DEPOSIT_PIXEL:
-                        outtakeServo.setPosition(OS_DEPOSIT_2);
-                        if (timer.seconds() >= FINGER_MOVE){
-                            timer.reset();
-                            robot = RobotState.INIT_PARK;
-                        }
+                    outtakeServo.setPosition(OS_DEPOSIT_2);
+                    if (timer.seconds() >= FINGER_MOVE){
+                        timer.reset();
+                        robot = RobotState.INIT_PARK;
+                    }
                     break;
                 case INIT_PARK:
                     drive.followTrajectorySequence(INIT_PARK);

@@ -22,6 +22,14 @@ public class CVVariables {
     public static double higherSY = 255;
     public static double higherVY = 255;
 
+    //Scalar Detector Values
+    public static double lowerHR = 0;
+    public static double lowerSR= 50;
+    public static double lowerVR = 50;
+    public static double higherHR = 10;
+    public static double higherSR = 255;
+    public static double higherVR = 255;
+
     public static final int CAMERA_WIDTH = 640; // width  of wanted camera resolution
     public static final int CAMERA_HEIGHT = 360; // height of wanted camera resolution
 

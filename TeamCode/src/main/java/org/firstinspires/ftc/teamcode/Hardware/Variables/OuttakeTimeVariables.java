@@ -5,10 +5,10 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class OuttakeTimeVariables {
     //OUTTAKE ARM TIME
-    public static double HOVER_PIXEL_TIME = 1;
-    public static double WRIST_INIT_TIME = 1.2;
-    public static double GRAB_PIXEL_TIME = 1;
-    public static double FLIP_PIXEL_TIME = .4;
-    public static double CLAW_MOVE_TIME = 0.6;
-    public static double OUTTAKE_CLAW_SERVO_TIME = 0.8;
+    public static double TILT_BUCKET = 1;
+    public static double FINGER_MOVE = 1;
+    public static double SWING_ARM = 1.5;
+    public static double RESET_ARM_TIMER = 1;
+    public static double SLIDES_DOWN_TIMER = 1;
+
 }
