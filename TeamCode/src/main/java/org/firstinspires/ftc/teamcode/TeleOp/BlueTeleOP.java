@@ -23,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.lowe
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.CVVariables.objectWidthInRealWorldUnits;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeTimeVariables.INTAKE_RESET_TIME;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeTimeVariables.INTAKE_TRANSFER_TIME;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeTimeVariables.TELEOP_CONSTANT_INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_INTAKE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_TILT;
@@ -208,8 +209,11 @@ public class BlueTeleOP extends LinearOpMode {
             }
             /** Intake Motor SPINNING YI INGOISHIFe  ***/
             intakeMotor.setPower(gamepad1.right_trigger);
-            while(gamepad1.right_trigger == 0 && gamepad1.left_trigger > 0){
+            if(gamepad1.right_trigger == 0 && gamepad1.left_trigger > 0){
                 intakeMotor.setPower(-gamepad1.left_trigger);
+            }
+            if(gamepad1.right_trigger == 0 && gamepad1.left_trigger == 0 && gamepad1.a){
+                intakeMotor.setPower(TELEOP_CONSTANT_INTAKE_POWER);
             }
 
             /** OUTTAKE STATE MACHINE THINGY **/
@@ -268,14 +272,18 @@ public class BlueTeleOP extends LinearOpMode {
                     if (gamepad2.left_bumper) {
                         outtakeServo.setPosition(OS_DEPOSIT_1);
                     }
+                    if(gamepad2.x){
+                        outtakeServo.setPosition(OS_CLOSE);
+                    }
                     if (gamepad2.y) {
                         timer.reset();
                         outtakeState = OuttakeState.RESET_ARM;
                     }
+                    if (gamepad2.b){
+                        drivetrain.moveSlides(drivetrain.leftSlide.getCurrentPosition()+100);
+                    }
                     if (gamepad2.a) {
-                        drivetrain.powerSlides(gamepad2.left_stick_y * slidesMultiplier);
-                    } else if (drivetrain.getCurrentSlidePower() != 0) {
-                        drivetrain.powerSlides(0);
+                        drivetrain.moveSlides(drivetrain.leftSlide.getCurrentPosition()-100);
                     }
                     break;
                 case RESET_ARM:

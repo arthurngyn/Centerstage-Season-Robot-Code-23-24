@@ -81,28 +81,34 @@ public class Blue1 extends LinearOpMode {
     public static double START_Y = 61.5;
     public static double START_ANGLE = 270;
 
-    public static double SPIKE_MARK_X_LEFT = 31.5;
-    public static double SPIKE_MARK_Y_LEFT = 33;
-    public static double BACKDROP_X_LEFT = 44;
-    public static double BACKDROP_Y_LEFT = 36.5;
+    public static double INIT_SPIKE_MARK_X_LEFT = 29;
+    public static double INIT_SPIKE_MARK_Y_LEFT = 30;
+    public static double SPIKE_MARK_X_LEFT = 26;
+    public static double SPIKE_MARK_Y_LEFT = 30;
+    public static double BACKDROP_X_LEFT = 43;
+    public static double BACKDROP_Y_LEFT = 40.75;
 
-    public static double SPIKE_MARK_X_MIDDLE = 24;
-    public static double SPIKE_MARK_Y_MIDDLE = 22;
-    public static double BACKDROP_X_MIDDLE = 44;
-    public static double BACKDROP_Y_MIDDLE = 30;
+    public static double INIT_SPIKE_MARK_X_MIDDLE = 24;
+    public static double INIT_SPIKE_MARK_Y_MIDDLE = 22;
+    public static double SPIKE_MARK_X_MIDDLE = 19;
+    public static double SPIKE_MARK_Y_MIDDLE = 23;
+    public static double BACKDROP_X_MIDDLE = 43;
+    public static double BACKDROP_Y_MIDDLE = 34;
 
-    public static double SPIKE_MARK_X_RIGHT = 10;
-    public static double SPIKE_MARK_Y_RIGHT = 36;
-    public static double BACKDROP_X_RIGHT = 44;
-    public static double BACKDROP_Y_RIGHT = 23;
+    public static double INIT_SPIKE_MARK_X_RIGHT = 13;
+    public static double INIT_SPIKE_MARK_Y_RIGHT = 33;
+    public static double SPIKE_MARK_X_RIGHT = 5;
+    public static double SPIKE_MARK_Y_RIGHT = 33.5;
+    public static double BACKDROP_X_RIGHT = 43;
+    public static double BACKDROP_Y_RIGHT = 27.5;
 
     public static double SPIKE_MARK_ANGLE = 180;
     public static double BACKDROP_ANGLE = 180;
 
     public static double INIT_PARK_X = 40;
-    public static double INIT_PARK_Y = 5;
+    public static double INIT_PARK_Y = 57;
     public static double PARK_X = 50;
-    public static double PARK_Y = 5;
+    public static double PARK_Y = 57;
     public static double PARK_ANGLE = 180;
 
     public static double xyP = 0.6;
@@ -164,7 +170,7 @@ public class Blue1 extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(START_X, START_Y, Math.toRadians(START_ANGLE));
 
-        double spike_mark_x, spike_mark_y, backdrop_x, backdrop_y;
+        double spike_mark_x, spike_mark_y, backdrop_x, backdrop_y, init_spike_mark_x, init_spike_mark_y;
 
         drive.setPoseEstimate(startPose);
         while(!opModeIsActive() && !isStopRequested()) {
@@ -189,21 +195,28 @@ public class Blue1 extends LinearOpMode {
                 spike_mark_y = SPIKE_MARK_Y_LEFT;
                 backdrop_x = BACKDROP_X_LEFT;
                 backdrop_y = BACKDROP_Y_LEFT;
+                init_spike_mark_x = INIT_SPIKE_MARK_X_LEFT;
+                init_spike_mark_y = INIT_SPIKE_MARK_Y_LEFT;
                 break;
             case "middle":
                 spike_mark_x = SPIKE_MARK_X_MIDDLE;
                 spike_mark_y = SPIKE_MARK_Y_MIDDLE;
                 backdrop_x = BACKDROP_X_MIDDLE;
                 backdrop_y = BACKDROP_Y_MIDDLE;
+                init_spike_mark_x = INIT_SPIKE_MARK_X_MIDDLE;
+                init_spike_mark_y = INIT_SPIKE_MARK_Y_MIDDLE;
                 break;
             default:
                 spike_mark_x = SPIKE_MARK_X_RIGHT;
                 spike_mark_y = SPIKE_MARK_Y_RIGHT;
                 backdrop_x = BACKDROP_X_RIGHT;
                 backdrop_y = BACKDROP_Y_RIGHT;
+                init_spike_mark_x = INIT_SPIKE_MARK_X_RIGHT;
+                init_spike_mark_y = INIT_SPIKE_MARK_Y_RIGHT;
                 break;
         }
-        Trajectory DROP_SPIKE = drive.trajectoryBuilder(startPose)
+        TrajectorySequence DROP_SPIKE = drive.trajectorySequenceBuilder(startPose)
+                .lineToSplineHeading(new Pose2d(init_spike_mark_x, init_spike_mark_y, Math.toRadians(START_ANGLE)))
                 .lineToSplineHeading(new Pose2d(spike_mark_x, spike_mark_y, Math.toRadians(SPIKE_MARK_ANGLE)))
                 .build();
         Trajectory DROP_PIXEL = drive.trajectoryBuilder(DROP_SPIKE.end())
@@ -233,7 +246,7 @@ public class Blue1 extends LinearOpMode {
                     robot = RobotState.DRIVE_TO_SPIKE;
                     break;
                 case DRIVE_TO_SPIKE:
-                    drive.followTrajectory(DROP_SPIKE);
+                    drive.followTrajectorySequence(DROP_SPIKE);
                     if (!drive.isBusy()) {
                         timer.reset();
                         robot = RobotState.DROP_SPIKE;
@@ -285,11 +298,11 @@ public class Blue1 extends LinearOpMode {
                     }
                     break;
                 case PARK:
+                    leftServo.setPosition(LS_INTAKE);
+                    rightServo.setPosition((RS_INTAKE));
+                    angledServo.setPosition(AS_INTAKE);
                     if (timer.seconds() >= ARM_DEPOSIT_TIME) {
                         drivetrain.moveSlides(DPAD_LEFT);
-                        leftServo.setPosition(LS_INTAKE);
-                        rightServo.setPosition((RS_INTAKE));
-                        angledServo.setPosition(AS_INTAKE);
                         drive.followTrajectorySequence(PARK);
                         if(!drive.isBusy()){
                             drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(0)));
