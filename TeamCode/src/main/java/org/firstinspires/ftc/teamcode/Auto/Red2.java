@@ -10,7 +10,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeTimeVariab
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeTimeVariables.SLIDES_MOVE_TIME;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_INTAKE;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AUTON_POS;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AUTON_POS_INITIAL;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.DPAD_LEFT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.LS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.LS_INTAKE;
@@ -280,7 +280,7 @@ public class Red2 extends LinearOpMode {
                     }
                     break;
                 case MOVE_SLIDES:
-                    drivetrain.moveSlides(AUTON_POS);
+                    drivetrain.moveSlides(AUTON_POS_INITIAL);
                     if (timer.seconds() >= SLIDES_MOVE_TIME){
                         timer.reset();
                         robot = RobotState.SWING_ARM;

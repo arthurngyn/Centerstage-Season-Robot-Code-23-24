@@ -20,7 +20,8 @@ public class OuttakeArmVariables {
     public static double OS_DEPOSIT_1 = 0.98;
     public static double OS_DEPOSIT_2 = 1;
     //SLIDES
-    public static int AUTON_POS = 1100;
+    public static int AUTON_POS_INITIAL = 900;
+    public static int AUTON_POS_POST = 1100;
     public static int DPAD_DOWN = 1000;
     public static int DPAD_UP = 2200;
     public static int DPAD_RIGHT = 1500;

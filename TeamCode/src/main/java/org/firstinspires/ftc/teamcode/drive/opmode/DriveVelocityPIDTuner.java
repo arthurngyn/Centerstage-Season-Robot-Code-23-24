@@ -50,7 +50,7 @@ import java.util.List;
  */
 @Disabled
 //@Config
-//@Autonomous(group = "drive")
+@Autonomous(group = "drive")
 public class DriveVelocityPIDTuner extends LinearOpMode {
     public static double DISTANCE = 72; // in
 

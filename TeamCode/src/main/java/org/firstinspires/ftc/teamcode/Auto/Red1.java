@@ -11,7 +11,8 @@ import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeTimeVariab
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_INTAKE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_TILT;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AUTON_POS;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AUTON_POS_INITIAL;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AUTON_POS_POST;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.DPAD_LEFT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.LS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.LS_INTAKE;
@@ -21,6 +22,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariab
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.RS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.RS_INTAKE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeTimeVariables.FINGER_MOVE;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeTimeVariables.SLIDES_DOWN_TIMER;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeTimeVariables.TILT_BUCKET;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -119,6 +121,7 @@ public class Red1 extends LinearOpMode {
         SWING_ARM,
         DRIVE_TO_BACKDROP,
         DEPOSIT_PIXEL,
+        SLIDES_UP,
         INIT_PARK,
         PARK,
         LOCK_PARK
@@ -258,7 +261,7 @@ public class Red1 extends LinearOpMode {
                     }
                     break;
                 case MOVE_SLIDES:
-                    drivetrain.moveSlides(AUTON_POS);
+                    drivetrain.moveSlides(AUTON_POS_INITIAL);
                     if (timer.seconds() >= SLIDES_MOVE_TIME){
                         timer.reset();
                         robot = RobotState.SWING_ARM;
@@ -283,7 +286,13 @@ public class Red1 extends LinearOpMode {
                 case DEPOSIT_PIXEL:
                     outtakeServo.setPosition(OS_DEPOSIT_2);
                     if (timer.seconds() >= FINGER_MOVE){
-                        drivetrain.moveSlides(AUTON_POS + 300);
+                        timer.reset();
+                        robot = RobotState.SLIDES_UP;
+                    }
+                    break;
+                case SLIDES_UP:
+                    drivetrain.moveSlides(AUTON_POS_POST);
+                    if(timer.seconds() >= SLIDES_DOWN_TIMER){
                         timer.reset();
                         robot = RobotState.INIT_PARK;
                     }

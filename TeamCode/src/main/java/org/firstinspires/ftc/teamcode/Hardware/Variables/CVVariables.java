@@ -8,7 +8,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 public class CVVariables {
     //Scalar Detector Values
     public static double lowerHB = 100;
-    public static double lowerSB = 50;
+    public static double lowerSB = 100;
     public static double lowerVB = 50;
     public static double higherHB = 140;
     public static double higherSB = 255;

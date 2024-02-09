@@ -15,18 +15,17 @@ import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeTimeVariab
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.IntakeTimeVariables.SLIDES_MOVE_TIME;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_INTAKE;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AS_TILT;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AUTON_POS;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AUTON_POS_INITIAL;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.AUTON_POS_POST;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.DPAD_LEFT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.LS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.LS_INTAKE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.OS_CLOSE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.OS_DEPOSIT_2;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.OS_INTAKE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.RS_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeArmVariables.RS_INTAKE;
 import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeTimeVariables.FINGER_MOVE;
-import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeTimeVariables.TILT_BUCKET;
+import static org.firstinspires.ftc.teamcode.Hardware.Variables.OuttakeTimeVariables.SLIDES_DOWN_TIMER;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -44,7 +43,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.TeleOp.BlueTeleOP;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.ErrorCalc;
@@ -67,7 +65,7 @@ import java.util.List;
 
 @Config
 @Autonomous(name = "Blue 1", group = "Blue")
-public class Blue1 extends LinearOpMode {
+public class Blue1Left extends LinearOpMode {
 
     double cX;
     double cY;
@@ -83,23 +81,23 @@ public class Blue1 extends LinearOpMode {
 
     public static double INIT_SPIKE_MARK_X_LEFT = 29;
     public static double INIT_SPIKE_MARK_Y_LEFT = 30;
-    public static double SPIKE_MARK_X_LEFT = 26;
+    public static double SPIKE_MARK_X_LEFT = 27;
     public static double SPIKE_MARK_Y_LEFT = 30;
-    public static double BACKDROP_X_LEFT = 43;
-    public static double BACKDROP_Y_LEFT = 40.75;
+    public static double BACKDROP_X_LEFT = 44.5;
+    public static double BACKDROP_Y_LEFT = 39;
 
     public static double INIT_SPIKE_MARK_X_MIDDLE = 24;
     public static double INIT_SPIKE_MARK_Y_MIDDLE = 22;
     public static double SPIKE_MARK_X_MIDDLE = 19;
     public static double SPIKE_MARK_Y_MIDDLE = 23;
-    public static double BACKDROP_X_MIDDLE = 43;
+    public static double BACKDROP_X_MIDDLE = 44.5;
     public static double BACKDROP_Y_MIDDLE = 34;
 
     public static double INIT_SPIKE_MARK_X_RIGHT = 13;
     public static double INIT_SPIKE_MARK_Y_RIGHT = 33;
     public static double SPIKE_MARK_X_RIGHT = 5;
     public static double SPIKE_MARK_Y_RIGHT = 33.5;
-    public static double BACKDROP_X_RIGHT = 43;
+    public static double BACKDROP_X_RIGHT = 44.5;
     public static double BACKDROP_Y_RIGHT = 27.5;
 
     public static double SPIKE_MARK_ANGLE = 180;
@@ -122,6 +120,7 @@ public class Blue1 extends LinearOpMode {
         SWING_ARM,
         DRIVE_TO_BACKDROP,
         DEPOSIT_PIXEL,
+        SLIDES_UP,
         INIT_PARK,
         PARK,
         LOCK_PARK
@@ -261,7 +260,7 @@ public class Blue1 extends LinearOpMode {
                     }
                     break;
                 case MOVE_SLIDES:
-                        drivetrain.moveSlides(AUTON_POS);
+                        drivetrain.moveSlides(AUTON_POS_INITIAL);
                         if (timer.seconds() >= SLIDES_MOVE_TIME){
                         timer.reset();
                         robot = RobotState.SWING_ARM;
@@ -287,8 +286,15 @@ public class Blue1 extends LinearOpMode {
                         outtakeServo.setPosition(OS_DEPOSIT_2);
                         if (timer.seconds() >= FINGER_MOVE){
                             timer.reset();
-                            robot = RobotState.INIT_PARK;
+                            robot = RobotState.SLIDES_UP;
                         }
+                    break;
+                case SLIDES_UP:
+                    drivetrain.moveSlides(AUTON_POS_POST);
+                    if(timer.seconds() >= SLIDES_DOWN_TIMER){
+                        timer.reset();
+                        robot = RobotState.INIT_PARK;
+                    }
                     break;
                 case INIT_PARK:
                     drive.followTrajectorySequence(INIT_PARK);
